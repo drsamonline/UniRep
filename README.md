@@ -1,5 +1,10 @@
 <div align="center">
 
+[![Licence: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.0.0-6d8cff)](VERSION)
+[![Live](https://img.shields.io/badge/app-on%20Replit-22c55e)](https://replit.com/@sohilmomin2000/Homeopathic-Digital-Repe)
+
+
 # Universal Index Repertory
 
 **The repertory, indexed — a single searchable index across the classical repertories.**
