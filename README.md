@@ -7,6 +7,8 @@
 
 # Universal Index Repertory
 
+
+![Screenshot](docs/shot.png)
 **The repertory, indexed — a single searchable index across the classical repertories.**
 
 [**Open the app**](https://replit.com/@sohilmomin2000/Homeopathic-Digital-Repe) &nbsp;·&nbsp;
