@@ -1,26 +1,31 @@
 # Privacy
 
-Version: 1.0
-Effective: 09 November 2026
+Version: 1.1
+Effective: 15 November 2026
 Owner: Dr Sohil Momin — sohilmomin2000@gmail.com
-Changes: Initial version.
+Changes: Corrected the hosting statement. v1.0 said the app ran only on your own device; it is in fact
+served from a hosted page and runs in your browser. What it collects and stores is unchanged: nothing.
 
 ## What this app is
 
 Universal Index Repertory
 
-It runs on your own device. There is no account, no server and no sign-in.
+The app is delivered from a hosted page (currently Replit) and runs in your browser. There is no account
+and no sign-in. Fetching that page is the only request the host serves: nothing you type, search or store
+is sent to it, and no case or search is kept on any server.
 
 ## What it collects
 
 **Nothing.** No analytics, no telemetry, no crash reporting, no fingerprinting, no advertising identifier, no
 email capture.
 
-There is no code in it that reaches a host outside your device: no request carries anything you type or store.
+The app makes no request that carries anything you type or store: searching and reading happen on your
+device, and no search term, rubric or case note leaves it.
 
 ## What is stored on your device
 
-Nothing. The app keeps no record between visits, so there is nothing to erase.
+Nothing. The app keeps no record between visits, so there is nothing to erase. Your browser may cache the
+page itself for speed, as it does for any site; that copy holds no search and no case data.
 
 ## Links that leave the app
 

@@ -1,0 +1,13 @@
+# lychee configuration — remote link check used by .github/workflows/links.yml
+# Local (relative) links are checked by scripts/check-links.py instead.
+
+max_retries = 2
+retry_wait_time = 5
+timeout = 20
+accept = ["200..=299", "403", "429"] # 403: hosts that block bare link checkers
+
+exclude = [
+  # The Replit repl returns 404 to non-browser requests (private or renamed).
+  # Re-enable this line once the app has a publicly reachable URL again.
+  "^https://replit\\.com/",
+]
