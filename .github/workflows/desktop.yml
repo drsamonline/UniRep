@@ -25,7 +25,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          # Tauri v2 needs WebKitGTK 4.1, which 22.04 does not ship.
+          - os: ubuntu-24.04
             bundles: appimage,deb
             python: python3
           - os: windows-latest
@@ -52,9 +53,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf \
-            libgtk-3-dev libjavascriptcoregtk-4.1-dev libayatana-appindicator3-dev \
-            build-essential curl wget file libssl-dev
+            libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf \
+            libgtk-3-dev libxdo-dev libssl-dev \
+            build-essential curl wget file
 
       - uses: dtolnay/rust-toolchain@stable
 

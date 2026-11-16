@@ -12,8 +12,11 @@
  */
 import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(dirname(new URL(import.meta.url).pathname), "..");
+// fileURLToPath, not .pathname: on Windows the latter yields "/D:/a/…", which
+// resolve() turns into an unusable path.
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 
 const sqlDist = join(root, "node_modules", "sql.js", "dist");
