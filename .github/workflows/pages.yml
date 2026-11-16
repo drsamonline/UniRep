@@ -67,6 +67,8 @@ jobs:
           cp -r docs/. _site/
           mkdir -p _site/app
           cp -r app/dist/. _site/app/
+          # The export uses root-absolute paths; make them relative to /app/.
+          node scripts/rewrite-web-paths.mjs _site/app /UniRep/app/
           # SPA routes resolve to the exported index
           cp _site/app/index.html _site/app/404.html
           # GitHub Pages must not run Jekyll over the exported bundle
