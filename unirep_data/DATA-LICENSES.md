@@ -21,9 +21,10 @@ added:
 | storage keys / AsyncStorage prefixes | `materia_ai:*` | `unirep:*` |
 | release artifacts | `materia_ai_core_bundle.zip` | `unirep_core_bundle.zip` |
 
-The uploaded `materia_ai_core_bundle.zip` at the repository root is the legacy
-upload and keeps its old name and internal `materia_ai_data/` paths until a build
-from `scripts/build_core_db.py` replaces it.
+The uploaded archives (`materia_ai_core_bundle.zip` and the split
+`Homeopathic-Digital-Repe.zip.00*`) were removed once the app and its data were
+in the tree; the blobs still exist in earlier commits, so the repository's Git
+history remains larger than its working tree.
 
 The core database is built from converted repertory JSON in
 [drsamonline/homoeopathic-materia-medica-repertory-json](https://github.com/drsamonline/homoeopathic-materia-medica-repertory-json).

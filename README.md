@@ -12,6 +12,8 @@
 **The repertory, indexed — a single searchable index across the classical repertories.**
 
 [**Run it locally**](#run-it-locally) &nbsp;·&nbsp;
+[Guide](docs/GUIDE.md) &nbsp;·&nbsp;
+[Audit](docs/AUDIT.md) &nbsp;·&nbsp;
 [Privacy](PRIVACY.md) &nbsp;·&nbsp;
 [Security](SECURITY.md)
 
