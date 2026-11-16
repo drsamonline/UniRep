@@ -35,10 +35,11 @@ Output lands in `src-tauri/target/release/bundle/`: `nsis/*.exe` on Windows,
 
 ## CI
 
-`.github/workflows/desktop.yml` builds both platforms on demand
-(**Actions → Desktop → Run workflow**) or on a `v*` tag, and uploads the
-installers as artifacts. It builds the repertory database from the source
-repository in the runner, because the GPL database is never committed.
+`.github/workflows/desktop.yml` builds both platforms and uploads the installers
+as artifacts. It runs on demand (**Actions → Desktop → Run workflow**) and on a
+push to `main` that touches `desktop/`, so the shell is compiled whenever it
+changes. The repertory database is built from the source repository in the
+runner, because the GPL database is never committed.
 
 ## Notes
 

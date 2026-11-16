@@ -8,8 +8,13 @@ name: Desktop
 on:
   workflow_dispatch:
   push:
-    tags:
-      - "v*"
+    branches: [main]
+    paths:
+      - "desktop/**"
+      - ".github/workflows/desktop.yml"
+  pull_request:
+    paths:
+      - "desktop/**"
 
 permissions:
   contents: write
