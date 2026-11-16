@@ -41,6 +41,22 @@ policy — which apply to the application wherever it is run.
 See [PRIVACY.md](PRIVACY.md) for the full statement, and [SECURITY.md](SECURITY.md) for how to
 report a problem.
 
+## The data core
+
+The searchable core is a SQLite database built from the converted repertory JSON in
+[drsamonline/homoeopathic-materia-medica-repertory-json](https://github.com/drsamonline/homoeopathic-materia-medica-repertory-json):
+real rubric text, real remedy links, grades only where the source prints them, and no FTS5
+table (so the file opens in the WASM SQLite the offline build uses).
+
+```sh
+python3 scripts/build_core_db.py --source-dir ../hmr-json            # GPL-3.0 data
+python3 scripts/build_core_db.py --source-dir ../hmr-json --cc0-only # CC0 data
+```
+
+Generated databases are **not tracked**, and the data is licensed separately from the
+code — including a GPL v3 repertory in the build makes the output GPL v3. Read
+[materia_ai_data/DATA-LICENSES.md](materia_ai_data/DATA-LICENSES.md) before distributing one.
+
 ## Support
 
 | | |
