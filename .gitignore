@@ -19,5 +19,10 @@ app/assets/*.db
 app/assets/*.validation.json
 _site/
 
+# Desktop shell build output (Tauri)
+desktop/node_modules/
+desktop/src-tauri/target/
+desktop/src-tauri/gen/
+
 # Local screenshots and scratch output
 artifacts/

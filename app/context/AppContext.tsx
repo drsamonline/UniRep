@@ -5,6 +5,7 @@ import { MEDICINE_SYMPTOMS } from "@/data/medicineSymptoms";
 import { SYMPTOMS } from "@/data/symptoms";
 import type { Case, CaseSymptom, CoreSearchResult, Medicine, MedicineSymptom, Patient, Repertorisation, Symptom } from "@/types";
 import { useCoreDatabase } from "@/context/CoreDatabaseContext";
+import { readSecure, writeSecure } from "@/lib/secureStorage";
 
 const KEYS = {
   PATIENTS: "unirep_patients",
@@ -91,15 +92,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       try {
         await migrateLegacyStorage();
         const [p, c, cs, r] = await Promise.all([
-          AsyncStorage.getItem(KEYS.PATIENTS),
-          AsyncStorage.getItem(KEYS.CASES),
-          AsyncStorage.getItem(KEYS.CASE_SYMPTOMS),
-          AsyncStorage.getItem(KEYS.REPERTORISATIONS),
+          readSecure<Patient[]>(KEYS.PATIENTS),
+          readSecure<Case[]>(KEYS.CASES),
+          readSecure<CaseSymptom[]>(KEYS.CASE_SYMPTOMS),
+          readSecure<Repertorisation[]>(KEYS.REPERTORISATIONS),
         ]);
-        if (p) setPatients(JSON.parse(p));
-        if (c) setCases(JSON.parse(c));
-        if (cs) setCaseSymptoms(JSON.parse(cs));
-        if (r) setRepertorisations(JSON.parse(r));
+        if (p) setPatients(p);
+        if (c) setCases(c);
+        if (cs) setCaseSymptoms(cs);
+        if (r) setRepertorisations(r);
       } catch (e) {}
     };
     load();
@@ -111,14 +112,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const newCase: Case = { ...c, id: generateId(), caseNumber };
     const updated = [newCase, ...cases];
     setCases(updated);
-    await AsyncStorage.setItem(KEYS.CASES, JSON.stringify(updated));
+    await writeSecure(KEYS.CASES, updated);
     return newCase;
   }, [cases]);
 
   const updateCase = useCallback(async (id: string, updates: Partial<Case>) => {
     const updated = cases.map((c) => (c.id === id ? { ...c, ...updates } : c));
     setCases(updated);
-    await AsyncStorage.setItem(KEYS.CASES, JSON.stringify(updated));
+    await writeSecure(KEYS.CASES, updated);
   }, [cases]);
 
   const deleteCase = useCallback(async (id: string) => {
@@ -129,9 +130,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setCaseSymptoms(updatedSymptoms);
     setRepertorisations(updatedReps);
     await Promise.all([
-      AsyncStorage.setItem(KEYS.CASES, JSON.stringify(updated)),
-      AsyncStorage.setItem(KEYS.CASE_SYMPTOMS, JSON.stringify(updatedSymptoms)),
-      AsyncStorage.setItem(KEYS.REPERTORISATIONS, JSON.stringify(updatedReps)),
+      writeSecure(KEYS.CASES, updated),
+      writeSecure(KEYS.CASE_SYMPTOMS, updatedSymptoms),
+      writeSecure(KEYS.REPERTORISATIONS, updatedReps),
     ]);
   }, [cases, caseSymptoms, repertorisations]);
 
@@ -139,14 +140,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const filtered = caseSymptoms.filter((cs) => cs.caseId !== caseId);
     const updated = [...filtered, ...newSymptoms];
     setCaseSymptoms(updated);
-    await AsyncStorage.setItem(KEYS.CASE_SYMPTOMS, JSON.stringify(updated));
+    await writeSecure(KEYS.CASE_SYMPTOMS, updated);
   }, [caseSymptoms]);
 
   const saveRepertorisation = useCallback(async (r: Omit<Repertorisation, "id">): Promise<Repertorisation> => {
     const newRep: Repertorisation = { ...r, id: generateId() };
     const updated = [newRep, ...repertorisations];
     setRepertorisations(updated);
-    await AsyncStorage.setItem(KEYS.REPERTORISATIONS, JSON.stringify(updated));
+    await writeSecure(KEYS.REPERTORISATIONS, updated);
     return newRep;
   }, [repertorisations]);
 

@@ -21,6 +21,13 @@ added:
 | storage keys / AsyncStorage prefixes | `materia_ai:*` | `unirep:*` |
 | release artifacts | `materia_ai_core_bundle.zip` | `unirep_core_bundle.zip` |
 
+**Distribution.** A built app carries the database inside it: the desktop
+installer (`desktop/`), the Android APK and the published web build each ship a
+GPL v3 database. Those binaries are therefore distributed under GPL v3, and the
+build workflows fetch the source repository rather than a committed database.
+
+## Removed archives
+
 The uploaded archives (`materia_ai_core_bundle.zip` and the split
 `Homeopathic-Digital-Repe.zip.00*`) were removed once the app and its data were
 in the tree; the blobs still exist in earlier commits, so the repository's Git

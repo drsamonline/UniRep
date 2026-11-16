@@ -8,8 +8,10 @@ the command, not by reading the code.
 | Path | Purpose |
 |---|---|
 | `app/` | The application: Expo (React Native) + Expo Router, TypeScript, ~4,000 lines |
-| `app/context/CoreDatabaseContext.tsx` | Native SQLite access to the bundled core (`.web.tsx` is the web variant) |
-| `app/context/AppContext.tsx` | Cases, patients and repertorisations in AsyncStorage |
+| `app/context/CoreDatabaseContext.tsx` | Native SQLite access to the bundled core (`.web.tsx` queries the same file with sql.js) |
+| `app/context/AppContext.tsx` | Cases, patients and repertorisations, stored encrypted |
+| `app/lib/vaultCrypto.ts`, `app/lib/secureStorage.ts` | AES-256-GCM envelopes, optional PIN wrapping |
+| `desktop/` | Tauri v2 shell that packages the web build as `.exe` / AppImage / `.deb` |
 | `app/constants/colors.ts` | light / dark / sepia palettes |
 | `docs/` | Landing page (`index.html`), guide, audit, UPI QR, screenshot |
 | `scripts/build_core_db.py` | Builds the core database from converted repertory JSON |
@@ -17,7 +19,7 @@ the command, not by reading the code.
 | `scripts/build-offline.sh` | Offline documentation pack (`dist/`) |
 | `scripts/check-links.py` | Local link/asset checker used by CI |
 | `unirep_data/DATA-LICENSES.md` | Two-licence data split and the naming table |
-| `.github/workflows/` | `links`, `pages`, `android` |
+| `.github/workflows/` | `links`, `pages`, `android`, `desktop` |
 | `PRIVACY.md`, `SECURITY.md`, `LICENSE` | Policy documents, PolyForm Noncommercial 1.0.0 |
 
 ## Verification matrix
@@ -26,8 +28,10 @@ the command, not by reading the code.
 |---|---|---|
 | Install (app) | `cd app && pnpm install` | ok, 14.5 s, 488 MB `node_modules` |
 | Typecheck | `cd app && tsc -p tsconfig.json --noEmit` | **clean** |
-| Web export | `cd app && expo export --platform web` | ok, `app/dist` 14 MB |
+| Web export | `cd app && pnpm run export:web` | ok, `app/dist` 58 MB (includes the 44 MB database and the WASM engine) |
 | Rendered in a browser | static serve + cloud browser | loads, no console errors |
+| **Web search** | browser, query `anxiety` | **25 rubrics from the real core** ("Chest > Chest > anxiety", "Stomach > Stomach > anxiety", …), header shows `669 CORE` |
+| Vault encryption | `node --experimental-strip-types app/lib/vaultCrypto.test.mjs` | 5/5 — round-trip, fresh IV, tamper rejection, PIN wrap, wrong PIN rejected |
 | Wide layout | viewport 1600 × 1000 | content centred at max 1180 px, no phone column |
 | Themes | clicked Sepia in the browser | palette switches and persists |
 | Branding | page render | header reads **UniRep** |
@@ -37,6 +41,7 @@ the command, not by reading the code.
 | Core build (shipped) | `--books repertorium-publicum-2008` | 74,480 rubrics · 735,460 links · 46 MB · all graded · `ok: true` |
 | Core in WASM SQLite | sql.js on the generated file | opens 167 ms, 0 FTS objects, 0 placeholder rubrics |
 | APK build | — | **not run** (workflow added, first run outstanding) |
+| Desktop build | — | **not run** (no Rust toolchain in this workspace; scaffold and workflow added) |
 | Native app | — | **not run** (no emulator/device here) |
 
 ## Data
@@ -61,6 +66,8 @@ the command, not by reading the code.
 | PRIVACY claimed the app ran only on the device while it was hosted | v1.1 then v1.2: the app is local, no host |
 | No CI | `links` (local + remote), `pages`, `android` |
 | App only on Replit, with a Replit-specific build pipeline | app in `app/`, built by `expo export` |
+| Web build could not search (`wa-sqlite.wasm` missing) | sql.js queries the bundled core; verified 25 hits |
+| Vault was plain JSON under an "Encrypted" label | AES-256-GCM envelopes, optional PIN-wrapped key |
 | Three names (`MateriaAI`, `materia_ai_*`, `UniRep`) | one name: **UniRep** |
 | Single phone-width column on desktop | responsive shell with breakpoints |
 | Light/dark only, no control | four themes, persisted |
@@ -71,12 +78,12 @@ the command, not by reading the code.
 | Gap | Severity | Detail |
 |---|---|---|
 | GitHub Pages not enabled | high | `/repos/…/pages` → 404. Workflow is ready; needs *Settings → Pages → Source: GitHub Actions* |
-| Web build has no SQLite | medium | `expo-sqlite`'s web worker imports a `wa-sqlite.wasm` the npm package does not ship, so the web export browses the 105-rubric seed index; the native builds query the real core |
-| No desktop binaries | medium | No Tauri/Electron scaffold yet, so no `.exe`/AppImage |
+| Web build loads 44 MB first | low | The browser fetches the whole core before searching (measured: 25 hits, ~9 s from cold on this VM). A page-level index would cut that; the data is cached after the first load |
+| No desktop binaries yet | medium | Tauri v2 scaffold, icons and a two-platform workflow are in `desktop/`; no Rust toolchain here, so nothing was compiled |
 | APK workflow never run | medium | Debug-signed; a release APK needs a signing key or EAS with `EXPO_TOKEN` |
 | History still holds the removed archives | low | ~70 MB of blobs remain in past commits; removing them needs a history rewrite (`git filter-repo`), which was not done |
 | Remedy names differ across books | low | All-books build has 10,365 tokens vs 669 when only Repertorium Publicum is included |
-| "Encrypted Vault" label vs plain AsyncStorage | medium | Storage is not encrypted; either encrypt or rename |
+| PIN unlock has no screen | medium | Encryption and `setVaultPin`/`unlockVault` exist; the vault pane does not yet offer a PIN field, so it runs in no-PIN mode (see `docs/Vault-Encryption.md`) |
 | Save on the analysis result | low | In the version inspected on the dev server, saving produced no stored case; not re-tested against this import |
 
 ## Reproduce everything

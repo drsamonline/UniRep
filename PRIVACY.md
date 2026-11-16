@@ -1,11 +1,13 @@
 # Privacy
 
-Version: 1.2
+Version: 1.3
 Effective: 16 November 2026
 Owner: Dr Sohil Momin — sohilmomin2000@gmail.com
-Changes: The app no longer runs from a hosted page. It is built from this repository and runs
-entirely on your own device (Android, iOS, desktop or a locally served web build), so no host is
-involved at all. What it collects and stores is unchanged: nothing.
+Changes: v1.3 states accurately what the app keeps on the device (cases you choose to save, encrypted)
+and describes the encryption. v1.2 removed the hosted page: the app is built from this repository and
+runs entirely on your own device (Android, iOS, desktop or a locally served web build).
+
+What it collects is unchanged: nothing.
 
 ## What this app is
 
@@ -25,8 +27,22 @@ device, and no search term, rubric or case note leaves it.
 
 ## What is stored on your device
 
-Nothing. The app keeps no record between visits, so there is nothing to erase. Your browser may cache the
-page itself for speed, as it does for any site; that copy holds no search and no case data.
+Only what you choose to save, and only on that device:
+
+- cases you store, with their rubrics and results;
+- patients you add to a case;
+- saved repertorisations;
+- your theme choice.
+
+Those records are written as **AES-256-GCM encrypted envelopes**. The data key is
+wrapped with PBKDF2-SHA256 (150,000 iterations) when you set a PIN; with no PIN it
+is kept next to the data, which protects the file but not the key store. The design
+and its limits are documented in [docs/Vault-Encryption.md](docs/Vault-Encryption.md).
+
+Nothing is uploaded, synced or backed up by the app. No search term, rubric or case
+note is ever sent anywhere, because there is no code that makes such a request.
+Removing a case in the app removes it from the device; clearing the app's data
+removes everything.
 
 ## Links that leave the app
 

@@ -7,7 +7,7 @@
   "scripts": {
     "start": "expo start",
     "web": "expo start --web",
-    "export:web": "expo export --platform web --output-dir dist",
+    "export:web": "expo export --platform web --output-dir dist && node scripts/finish-web-build.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
@@ -19,6 +19,7 @@
     "@tanstack/react-query": "^5.90.21",
     "@types/react": "~19.1.10",
     "@types/react-dom": "~19.1.7",
+    "@types/sql.js": "^1.4.11",
     "babel-plugin-react-compiler": "^19.0.0-beta-e993439-20250117",
     "expo": "~54.0.27",
     "expo-blur": "~15.0.8",
@@ -49,6 +50,10 @@
     "typescript": "~5.9.2"
   },
   "dependencies": {
-    "expo-sqlite": "~16.0.10"
+    "@noble/ciphers": "^1.2.1",
+    "@noble/hashes": "^1.7.1",
+    "expo-crypto": "^58.0.8",
+    "expo-sqlite": "~16.0.10",
+    "sql.js": "^1.13.0"
   }
 }

@@ -45,6 +45,18 @@ jobs:
         working-directory: app
         run: pnpm run typecheck
 
+      # The web export searches the real core, so the database is built here. It
+      # is GPL-licensed and therefore never committed; see unirep_data/DATA-LICENSES.md.
+      - name: Build the repertory database
+        run: |
+          git clone --depth 1 \
+            https://github.com/drsamonline/homoeopathic-materia-medica-repertory-json \
+            "$HOME/rep-src"
+          python3 scripts/build_core_db.py \
+            --source-dir "$HOME/rep-src" \
+            --books repertorium-publicum-2008
+          cp unirep_data/unirep_core.db app/assets/unirep_core.db
+
       - name: Export web build
         working-directory: app
         run: pnpm run export:web

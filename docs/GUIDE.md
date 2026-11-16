@@ -27,8 +27,10 @@ bundle is one nobody reads.
 | `unirep_data/DATA-LICENSES.md` | Where the data comes from and which licence each build carries |
 | `scripts/build_core_db.py` | Builds the core database from converted repertory JSON |
 | `scripts/prepare-app-data.sh` | Builds it and installs it as the app's bundled asset |
-| `docs/` | Landing page, this guide, the audit |
-| `.github/workflows/` | Link checks, Pages publication, Android APK |
+| `app/lib/vaultCrypto.ts` | AES-256-GCM record encryption, optional PIN-wrapped key |
+| `desktop/` | Tauri v2 shell that builds the `.exe` / AppImage / `.deb` |
+| `docs/` | Landing page, this guide, the audit, the encryption design |
+| `.github/workflows/` | Link checks, Pages publication, Android APK, desktop installers |
 
 ## Running it
 
@@ -42,6 +44,28 @@ pnpm run export:web              # static build in app/dist
 
 The app bundles its database, so it works with no network at all. Nothing is
 sent anywhere and no account is needed; see [../PRIVACY.md](../PRIVACY.md).
+
+`export:web` leaves a self-contained `app/dist`: the JavaScript, the repertory
+database and the SQLite WebAssembly engine, so the browser build searches the
+real core just like the phone does.
+
+## Desktop
+
+The same export is packaged by a Tauri shell in [`desktop/`](../desktop):
+
+```sh
+cd app && pnpm run export:web && cd ../desktop
+npm install && npm run build     # .exe (Windows) or .AppImage/.deb (Linux)
+```
+
+`.github/workflows/desktop.yml` does the same on both platforms on demand or on
+a `v*` tag, building the database in the runner because it is not committed.
+
+## Case encryption
+
+Cases, patients and repertorisations are stored as AES-256-GCM envelopes; an
+optional PIN wraps the data key with PBKDF2-SHA256. The design, its limits and
+the hardening options are in [Vault-Encryption.md](Vault-Encryption.md).
 
 ## What it is for
 

@@ -5,6 +5,8 @@ import type { CoreSearchResult } from "@/types";
 
 export interface CoreDatabaseState {
   ready: boolean;
+  loading: boolean;
+  error: string | null;
   counts: { remedies: number; rubrics: number; paragraphs: number };
   search: (query: string) => Promise<CoreSearchResult[]>;
 }
@@ -93,19 +95,16 @@ function NativeCoreDatabase({ children }: { children: React.ReactNode }) {
     [db, ready],
   );
 
-  return <CoreDatabase.Provider value={{ ready, counts, search }}>{children}</CoreDatabase.Provider>;
+  return (
+    <CoreDatabase.Provider value={{ ready, loading: !ready, error: null, counts, search }}>
+      {children}
+    </CoreDatabase.Provider>
+  );
 }
 
 export function CoreDatabaseProvider({ children }: { children: React.ReactNode }) {
-  if (Platform.OS === "web") {
-    // The static web export has no SQLite engine; the seed index still works and
-    // the counts describe what the native builds bundle.
-    return (
-      <CoreDatabase.Provider value={{ ready: true, counts: VERIFIED_COUNTS, search: async () => [] }}>
-        {children}
-      </CoreDatabase.Provider>
-    );
-  }
+  // Web is handled by CoreDatabaseContext.web.tsx (sql.js in WASM), which Metro
+  // resolves instead of this file for that platform.
   return (
     <SQLiteProvider
       databaseName="unirep_core.db"
