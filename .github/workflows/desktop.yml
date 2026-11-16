@@ -10,11 +10,13 @@ on:
   push:
     branches: [main]
     paths:
-      - "desktop/**"
+      - "desktop/src-tauri/**"
+      - "desktop/package.json"
       - ".github/workflows/desktop.yml"
   pull_request:
     paths:
-      - "desktop/**"
+      - "desktop/src-tauri/**"
+      - "desktop/package.json"
 
 permissions:
   contents: write

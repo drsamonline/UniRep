@@ -41,7 +41,7 @@ the command, not by reading the code.
 | Core build (shipped) | `--books repertorium-publicum-2008` | 74,480 rubrics · 735,460 links · 46 MB · all graded · `ok: true` |
 | Core in WASM SQLite | sql.js on the generated file | opens 167 ms, 0 FTS objects, 0 placeholder rubrics |
 | APK build | — | **not run** (workflow added, first run outstanding) |
-| Desktop build | — | **not run** (no Rust toolchain in this workspace; scaffold and workflow added) |
+| Desktop build | GitHub Actions run 43821599916 | **both platforms built**: Windows NSIS 17.4 MB, Linux AppImage+deb 111.1 MB |
 | Native app | — | **not run** (no emulator/device here) |
 
 ## Data
@@ -78,9 +78,9 @@ the command, not by reading the code.
 | Gap | Severity | Detail |
 |---|---|---|
 | Pages is published from Actions | — | **live**: `https://drsamonline.github.io/UniRep/` (landing) and `/UniRep/app/` (demo). Verified after deploy: bundle 200 (3.0 MB), `unirep_core.db` 200, `sql-wasm-browser.wasm` 200, app renders and `anxiety` returns 25 rubrics, header `669 CORE` |
-| GitHub topics and About link | low | Set outside the repository — needs a signed-in owner or a token; not settable from this workspace |
+| GitHub topics and About link | low | **Confirmed blocked**: the workflow token is refused (403, "Resource not accessible by integration"), so the About website still shows the old hosted-IDE URL and the topics are the old five. A signed-in owner sets them in About |
 | Web build loads 44 MB first | low | The browser fetches the whole core before searching (measured: 25 hits, ~9 s from cold on this VM). A page-level index would cut that; the data is cached after the first load |
-| No desktop binaries yet | medium | Tauri v2 scaffold, icons and a two-platform workflow are in `desktop/`; no Rust toolchain here, so nothing was compiled |
+| Desktop installers are unsigned | low | Both platforms build in CI; Windows SmartScreen and `apt` warn until code-signing and a repository key exist |
 | APK workflow never run | medium | Debug-signed; a release APK needs a signing key or EAS with `EXPO_TOKEN` |
 | History still holds the removed archives | low | ~70 MB of blobs remain in past commits; removing them needs a history rewrite (`git filter-repo`), which was not done |
 | Remedy names differ across books | low | All-books build has 10,365 tokens vs 669 when only Repertorium Publicum is included |

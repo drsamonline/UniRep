@@ -37,9 +37,19 @@ Output lands in `src-tauri/target/release/bundle/`: `nsis/*.exe` on Windows,
 
 `.github/workflows/desktop.yml` builds both platforms and uploads the installers
 as artifacts. It runs on demand (**Actions → Desktop → Run workflow**) and on a
-push to `main` that touches `desktop/`, so the shell is compiled whenever it
-changes. The repertory database is built from the source repository in the
-runner, because the GPL database is never committed.
+push to `main` that touches `desktop/src-tauri/` or `desktop/package.json`, so the
+shell is compiled whenever it changes. The repertory database is built from the
+source repository in the runner, because the GPL database is never committed.
+
+Both jobs pass as of run 43821599916 (`8a62aec`):
+
+| Artifact | Contents | Size |
+|---|---|---|
+| `unirep-desktop-Windows` | `UniRep_1.0.0_x64-setup.exe` (NSIS) | 17.4 MB |
+| `unirep-desktop-Linux` | `.AppImage` and `.deb` | 111.1 MB |
+
+Download them from the run page while signed in. The installers are unsigned, so
+Windows SmartScreen and `apt` will ask for confirmation.
 
 ## Notes
 
@@ -47,5 +57,5 @@ runner, because the GPL database is never committed.
   only the app's own files.
 - The Windows installer is unsigned, so SmartScreen will warn until a code-signing
   certificate is configured.
-- The desktop shell has not been built in this workspace (no Rust toolchain here);
-  the web payload it loads was built and tested. See `docs/AUDIT.md`.
+- There is no Rust toolchain in the workspace, so the shell is compiled only in
+  CI; the artifacts above are that build's output. See `docs/AUDIT.md`.
