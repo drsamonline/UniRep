@@ -2,7 +2,7 @@
 
 [![Licence: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-6d8cff)](VERSION)
-[![Live](https://img.shields.io/badge/app-on%20Replit-22c55e)](https://replit.com/@sohilmomin2000/Homeopathic-Digital-Repe)
+[![Runs offline](https://img.shields.io/badge/runs-offline-22c55e)](#run-it-locally)
 
 
 # Universal Index Repertory
@@ -11,7 +11,7 @@
 ![Screenshot](docs/shot.png)
 **The repertory, indexed — a single searchable index across the classical repertories.**
 
-[**Open the app**](https://replit.com/@sohilmomin2000/Homeopathic-Digital-Repe) &nbsp;·&nbsp;
+[**Run it locally**](#run-it-locally) &nbsp;·&nbsp;
 [Privacy](PRIVACY.md) &nbsp;·&nbsp;
 [Security](SECURITY.md)
 
@@ -25,12 +25,27 @@ UniRep is a **universal index** over the classical homoeopathic repertories: one
 across several books, so a rubric can be found by what it says rather than by remembering which
 volume printed it.
 
-The application itself is served from Replit, where it is built and run:
+The app lives in this repository, under [`app/`](app): an Expo (React Native) application that
+runs entirely on your device — Android, iOS, Windows, Linux, or a browser — with the repertory
+already inside it. There is no server and no account.
 
-**https://replit.com/@sohilmomin2000/Homeopathic-Digital-Repe**
-
-This repository carries the project's policy documents — the privacy policy and the security
+This repository also carries the project's policy documents — the privacy policy and the security
 policy — which apply to the application wherever it is run.
+
+## Run it locally
+
+```sh
+cd app
+pnpm install
+../scripts/prepare-app-data.sh     # builds the core database the app bundles
+pnpm start                         # phone / emulator
+pnpm run export:web                # static web build in app/dist
+```
+
+`prepare-app-data.sh` needs Python 3 and clones the converted repertory JSON on first run. It
+writes a generated database that is deliberately not tracked — read
+[unirep_data/DATA-LICENSES.md](unirep_data/DATA-LICENSES.md) first, because a build containing the
+GPL v3 repertory is itself GPL v3.
 
 ## What it does not do
 

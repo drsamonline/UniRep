@@ -1,0 +1,64 @@
+name: Android APK
+
+# Builds an installable APK. Debug-signed, so it installs directly and needs no
+# signing secrets; a Play-ready release APK needs an upload key (see the
+# commented step) or an EAS build with EXPO_TOKEN.
+#
+# NOTE: this workflow has not been executed yet — it was added before the first
+# run, so treat the first run as the test.
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install app dependencies
+        working-directory: app
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare the bundled core database
+        run: |
+          git clone --depth 1 --quiet \
+            https://github.com/drsamonline/homoeopathic-materia-medica-repertory-json.git \
+            .cache/hmr-json
+          ./scripts/prepare-app-data.sh .cache/hmr-json
+
+      - name: Generate the native project
+        working-directory: app
+        run: pnpm exec expo prebuild --platform android --no-install
+
+      - name: Build APK
+        working-directory: app/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unirep-android-debug-apk
+          path: app/android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

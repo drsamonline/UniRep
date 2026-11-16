@@ -18,7 +18,10 @@ import urllib.parse
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAN_EXT = {".md", ".html", ".htm"}
-SKIP_DIRS = {".git", "dist", "node_modules", ".freebuff"}
+SKIP_DIRS = {".git", "dist", "node_modules", ".freebuff", "app/dist", "app/node_modules"}
+# Paths that only exist in the assembled Pages site (docs/ is published at the
+# site root, the app export is copied to /app/ by .github/workflows/pages.yml).
+DEPLOYED_ONLY = {"app/", "./app/"}
 # Link syntaxes: markdown inline, markdown image, html href/src attributes.
 MARKDOWN_LINK = re.compile(r"!?\[[^\]]*\]\(\s*<?([^)>\s]+)>?(?:\s+\"[^\"]*\")?\s*\)")
 HTML_ATTR = re.compile(r"""\b(?:href|src)\s*=\s*["']([^"']+)["']""", re.I)
@@ -51,8 +54,8 @@ def main() -> int:
             if not link or link.lower().startswith(REMOTE):
                 continue
             local = urllib.parse.unquote(link.split("#", 1)[0].split("?", 1)[0])
-            if not local:
-                continue  # pure fragment
+            if not local or local in DEPLOYED_ONLY:
+                continue  # pure fragment, or a path the deploy step creates
             checked += 1
             resolved = os.path.normpath(os.path.join(os.path.dirname(path), local))
             if not os.path.exists(resolved):

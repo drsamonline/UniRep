@@ -1,18 +1,19 @@
 # Privacy
 
-Version: 1.1
-Effective: 15 November 2026
+Version: 1.2
+Effective: 16 November 2026
 Owner: Dr Sohil Momin — sohilmomin2000@gmail.com
-Changes: Corrected the hosting statement. v1.0 said the app ran only on your own device; it is in fact
-served from a hosted page and runs in your browser. What it collects and stores is unchanged: nothing.
+Changes: The app no longer runs from a hosted page. It is built from this repository and runs
+entirely on your own device (Android, iOS, desktop or a locally served web build), so no host is
+involved at all. What it collects and stores is unchanged: nothing.
 
 ## What this app is
 
 Universal Index Repertory
 
-The app is delivered from a hosted page (currently Replit) and runs in your browser. There is no account
-and no sign-in. Fetching that page is the only request the host serves: nothing you type, search or store
-is sent to it, and no case or search is kept on any server.
+The app is installed from this repository — as an app on your device, or as a web build you serve
+yourself. It has no server, no account and no sign-in, and nothing you type, search or store is
+sent anywhere: there is no code in it that reaches a host outside your device.
 
 ## What it collects
 

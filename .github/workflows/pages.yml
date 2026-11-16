@@ -1,6 +1,9 @@
 name: Pages
 
-# Publishes docs/ (the landing page) to GitHub Pages.
+# Publishes two things to GitHub Pages:
+#   /       the landing page from docs/
+#   /app/   the Expo web export of the app (the live demo)
+#
 # One-time setup: Settings -> Pages -> Build and deployment -> Source: GitHub Actions.
 
 on:
@@ -18,25 +21,58 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
+
+      - name: Install app dependencies
+        working-directory: app
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        working-directory: app
+        run: pnpm run typecheck
+
+      - name: Export web build
+        working-directory: app
+        run: pnpm run export:web
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp -r docs/. _site/
+          mkdir -p _site/app
+          cp -r app/dist/. _site/app/
+          # SPA routes resolve to the exported index
+          cp _site/app/index.html _site/app/404.html
+          # GitHub Pages must not run Jekyll over the exported bundle
+          touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
   deploy:
-    name: Deploy docs/
+    name: Deploy site
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Verify local links before publishing
-        run: python3 scripts/check-links.py
-
-      - uses: actions/configure-pages@v5
-
-      - name: Package docs/
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs
-
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4

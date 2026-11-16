@@ -5,14 +5,13 @@
 A **universal index** over the classical homoeopathic repertories: one search surface across several
 books, so a rubric can be found by what it says rather than by remembering which volume printed it.
 
-The application is built and served from Replit:
-
-**https://replit.com/@sohilmomin2000/Homeopathic-Digital-Repe**
-
 ## What this repository is
 
-It carries the project's **policy documents** — the privacy policy and the security policy — which
-apply to the application wherever it is run.
+It holds the application itself, under [`app/`](../app), together with the project's **policy
+documents** — the privacy policy and the security policy.
+
+The app runs on your own device. It has no server component, no account and no network calls;
+the repertory database is bundled with it and built from `scripts/build_core_db.py`.
 
 That is a deliberate split, and worth stating plainly: the code lives where it runs, and the promises
 live where they can be read without running anything. A privacy policy buried in an application
