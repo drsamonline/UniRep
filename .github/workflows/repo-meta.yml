@@ -1,0 +1,51 @@
+name: Repo metadata
+
+# Sets the repository's topics and website link. These live in GitHub settings,
+# not in the tree, so they cannot be changed by a commit; the workflow token is
+# the only credential available in this repository.
+#
+# If this run reports 403, the token cannot edit settings and the fields have to
+# be set by a signed-in owner in the repository's About panel.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/repo-meta.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set topics and homepage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -x
+          gh api -X PUT "repos/$REPO/topics" \
+            -f names[]=homeopathy \
+            -f names[]=homeopathic \
+            -f names[]=repertory \
+            -f names[]=materia-medica \
+            -f names[]=offline-first \
+            -f names[]=expo \
+            -f names[]=react-native \
+            -f names[]=typescript \
+            -f names[]=clinical-tools \
+            -f names[]=sqlite \
+            -f names[]=sql-js \
+            -f names[]=wasm \
+            -f names[]=tauri \
+            -f names[]=desktop-app \
+            -f names[]=github-pages \
+            -f names[]=local-first \
+            -f names[]=privacy-first \
+            -f names[]=case-management \
+            -f names[]=no-backend
+          gh api -X PATCH "repos/$REPO" \
+            -f homepage="https://drsamonline.github.io/UniRep/" \
+            -f description="Offline universal index over the classical homeopathic repertories — Expo app, desktop shell, and a searchable web demo."
