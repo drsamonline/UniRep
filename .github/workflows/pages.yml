@@ -57,6 +57,15 @@ jobs:
             --books repertorium-publicum-2008 \
             --out app/assets/unirep_core.db
 
+      # Expo Router reads its base path from app.json, and the router must strip
+      # /UniRep/app/ from the URL or every route 404s. The value is written here,
+      # in the runner only, so the local and desktop builds stay at the root.
+      - name: Set the Pages base path
+        working-directory: app
+        run: |
+          node -e "const fs=require('fs');const p='app.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));j.expo.experiments={...(j.expo.experiments||{}),baseUrl:'/UniRep/app'};fs.writeFileSync(p,JSON.stringify(j,null,2)+'\\n')"
+          node -e "console.log(JSON.parse(require('fs').readFileSync('app.json','utf8')).expo.experiments)"
+
       - name: Export web build
         working-directory: app
         run: pnpm run export:web
@@ -67,8 +76,6 @@ jobs:
           cp -r docs/. _site/
           mkdir -p _site/app
           cp -r app/dist/. _site/app/
-          # The export uses root-absolute paths; make them relative to /app/.
-          node scripts/rewrite-web-paths.mjs _site/app /UniRep/app/
           # SPA routes resolve to the exported index
           cp _site/app/index.html _site/app/404.html
           # GitHub Pages must not run Jekyll over the exported bundle
