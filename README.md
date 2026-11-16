@@ -2,6 +2,7 @@
 
 [![Licence: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-6d8cff)](VERSION)
+[![Live demo](https://img.shields.io/badge/demo-unirep-2f6f8f)](https://drsamonline.github.io/UniRep/app/)
 [![Runs offline](https://img.shields.io/badge/runs-offline-22c55e)](#run-it-locally)
 
 
@@ -11,6 +12,7 @@
 ![Screenshot](docs/shot.png)
 **The repertory, indexed — a single searchable index across the classical repertories.**
 
+[**Open the app**](https://drsamonline.github.io/UniRep/app/) &nbsp;·&nbsp;
 [**Run it locally**](#run-it-locally) &nbsp;·&nbsp;
 [Guide](docs/GUIDE.md) &nbsp;·&nbsp;
 [Audit](docs/AUDIT.md) &nbsp;·&nbsp;

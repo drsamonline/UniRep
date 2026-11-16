@@ -77,7 +77,8 @@ the command, not by reading the code.
 
 | Gap | Severity | Detail |
 |---|---|---|
-| GitHub Pages not enabled | high | `/repos/…/pages` → 404. Workflow is ready; needs *Settings → Pages → Source: GitHub Actions* |
+| Pages is published from Actions | — | **live**: `https://drsamonline.github.io/UniRep/` (landing) and `/UniRep/app/` (demo). Verified after deploy: bundle 200 (3.0 MB), `unirep_core.db` 200, `sql-wasm-browser.wasm` 200, app renders and `anxiety` returns 25 rubrics, header `669 CORE` |
+| GitHub topics and About link | low | Set outside the repository — needs a signed-in owner or a token; not settable from this workspace |
 | Web build loads 44 MB first | low | The browser fetches the whole core before searching (measured: 25 hits, ~9 s from cold on this VM). A page-level index would cut that; the data is cached after the first load |
 | No desktop binaries yet | medium | Tauri v2 scaffold, icons and a two-platform workflow are in `desktop/`; no Rust toolchain here, so nothing was compiled |
 | APK workflow never run | medium | Debug-signed; a release APK needs a signing key or EAS with `EXPO_TOKEN` |
