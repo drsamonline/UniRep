@@ -65,8 +65,8 @@ jobs:
             "$HOME/rep-src"
           ${{ matrix.python }} scripts/build_core_db.py \
             --source-dir "$HOME/rep-src" \
-            --books repertorium-publicum-2008
-          cp unirep_data/unirep_core.db app/assets/unirep_core.db
+            --books repertorium-publicum-2008 \
+            --out app/assets/unirep_core.db
 
       - name: Export the web build
         working-directory: app
