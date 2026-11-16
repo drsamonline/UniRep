@@ -43,20 +43,34 @@ export interface WrappedKey {
   ct: string;
 }
 
+const B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+// Implemented here rather than with atob/btoa or Buffer so the module runs
+// unchanged in Hermes, the browser and Node, with no platform types needed.
 function toBase64(bytes: Uint8Array): string {
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return typeof btoa === "function" ? btoa(binary) : Buffer.from(bytes).toString("base64");
+  let out = "";
+  for (let i = 0; i < bytes.length; i += 3) {
+    const [a, b, c] = [bytes[i], bytes[i + 1], bytes[i + 2]];
+    const triple = (a << 16) | ((b ?? 0) << 8) | (c ?? 0);
+    out += B64[(triple >> 18) & 63] + B64[(triple >> 12) & 63];
+    out += b === undefined ? "=" : B64[(triple >> 6) & 63];
+    out += c === undefined ? "=" : B64[triple & 63];
+  }
+  return out;
 }
 
 function fromBase64(value: string): Uint8Array {
-  if (typeof atob === "function") {
-    const binary = atob(value);
-    const out = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i += 1) out[i] = binary.charCodeAt(i);
-    return out;
+  const clean = value.replace(/[^A-Za-z0-9+/]/g, "");
+  const out = new Uint8Array(Math.floor((clean.length * 3) / 4));
+  let written = 0;
+  for (let i = 0; i < clean.length; i += 4) {
+    const chunk = [0, 1, 2, 3].map((k) => B64.indexOf(clean[i + k] ?? "A"));
+    const triple = (chunk[0] << 18) | (chunk[1] << 12) | (chunk[2] << 6) | chunk[3];
+    if (written < out.length) out[written++] = (triple >> 16) & 255;
+    if (written < out.length) out[written++] = (triple >> 8) & 255;
+    if (written < out.length) out[written++] = triple & 255;
   }
-  return new Uint8Array(Buffer.from(value, "base64"));
+  return out;
 }
 
 /** PBKDF2-SHA256 over a passphrase, used only to wrap the data key. */

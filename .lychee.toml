@@ -8,6 +8,8 @@ timeout = 20
 # 405 to HEAD, GitHub-hosted shops 403). The pages themselves exist.
 accept = ["200..=299", "403", "405", "429"]
 
-# No exclusions: the app no longer links to a hosted instance, so every URL in
-# the repository should resolve.
-exclude = []
+# The landing page opens the deployed app, a path only the Pages workflow
+# creates. It is excluded here so the link check does not race the deployment;
+# scripts/check-links.py verifies the source of that path, and the deploy itself
+# fails loudly if the export is missing.
+exclude = ["https://drsamonline.github.io/UniRep/app/"]

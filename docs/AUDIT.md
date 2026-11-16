@@ -65,7 +65,7 @@ the command, not by reading the code.
 | Missing UPI QR asset | real QR generated and verified decodable |
 | PRIVACY claimed the app ran only on the device while it was hosted | v1.1 then v1.2: the app is local, no host |
 | No CI | `links` (local + remote), `pages`, `android` |
-| App only on Replit, with a Replit-specific build pipeline | app in `app/`, built by `expo export` |
+| App lived only in a hosted IDE with its own build pipeline | app in `app/`, built by `expo export` |
 | Web build could not search (`wa-sqlite.wasm` missing) | sql.js queries the bundled core; verified 25 hits |
 | Vault was plain JSON under an "Encrypted" label | AES-256-GCM envelopes, optional PIN-wrapped key |
 | Three names (`MateriaAI`, `materia_ai_*`, `UniRep`) | one name: **UniRep** |
