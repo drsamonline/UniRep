@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the UniRep core database from the converted repertory JSON.
 
-The previous core (`materia_ai_data/materia_ai_core.db`) carried two defects that
+The previous core (`unirep_data/generated/unirep_core.db`) carried two defects that
 made its output meaningless: 51,268 of 55,768 rubrics were the placeholder string
 "<Book> extracted rubric N", and every remedy link was generated (grades 2 and 3
 only, distributed uniformly per `rubric_id % 5`) rather than read from a source.
@@ -16,13 +16,13 @@ It is also FTS5-free on purpose. The old database contained an FTS5 virtual tabl
 plain indexed table plus LIKE, measured at 21 ms over 74,480 rubrics in sql.js.
 
 Licensing is not uniform across the source books, so it is not uniform across the
-output either: see materia_ai_data/DATA-LICENSES.md. A build that includes the
+output either: see unirep_data/DATA-LICENSES.md. A build that includes the
 GPL v3 repertory produces a GPL v3 database.
 
 Usage:
     python3 scripts/build_core_db.py --source-dir ../homoeopathic-materia-medica-repertory-json
     python3 scripts/build_core_db.py --source-dir ../... --cc0-only
-    python3 scripts/build_core_db.py --source-dir ../... --out materia_ai_data/materia_ai_core.db
+    python3 scripts/build_core_db.py --source-dir ../... --out unirep_data/generated/unirep_core.db
 """
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUT = ROOT / "materia_ai_data" / "generated" / "materia_ai_core.db"
+DEFAULT_OUT = ROOT / "unirep_data" / "generated" / "unirep_core.db"
 
 # Books are addressed by their folder/file name inside the source repository.
 GPL_BOOKS = ["repertorium-publicum-2008"]
@@ -302,7 +302,7 @@ def main() -> int:
     books = args.books or (CC0_BOOKS if args.cc0_only else GPL_BOOKS + CC0_BOOKS)
     report = build(args.source_dir, books, args.out)
 
-    report_path = args.out.with_name("materia_ai_core.validation.json")
+    report_path = args.out.with_name("unirep_core.validation.json")
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
     print(json.dumps({k: report[k] for k in ("database", "database_licence", "counts", "grades", "ok")}, indent=2))

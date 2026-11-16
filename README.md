@@ -55,7 +55,7 @@ python3 scripts/build_core_db.py --source-dir ../hmr-json --cc0-only # CC0 data
 
 Generated databases are **not tracked**, and the data is licensed separately from the
 code — including a GPL v3 repertory in the build makes the output GPL v3. Read
-[materia_ai_data/DATA-LICENSES.md](materia_ai_data/DATA-LICENSES.md) before distributing one.
+[unirep_data/DATA-LICENSES.md](unirep_data/DATA-LICENSES.md) before distributing one.
 
 ## Support
 

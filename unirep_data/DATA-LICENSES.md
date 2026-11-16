@@ -1,5 +1,30 @@
 # Data and licensing
 
+## Naming
+
+One name, everywhere: **UniRep** — the repository, the app, the database and the
+scripts. Nothing is called `materia_ai`, `MateriaAI` or `UniRep Repertory`.
+
+This repository already follows it (`unirep_data/`, `unirep_core.db`,
+`unirep_core.validation.json`, `scripts/build_core_db.py`). The application still
+needs the same rename, and it lives outside this repository until its source is
+added:
+
+| Where | Current | Should be |
+|---|---|---|
+| app config (`app.json` / `app.config.*`) | `name`, `slug`, `scheme` | `UniRep` / `unirep` |
+| in-app header | `MateriaAI` | `UniRep` |
+| web page `<title>` (Expo) | `UniRep` | keep |
+| data directory read by the app | `materia_ai_data/` | `unirep_data/` |
+| database filename | `materia_ai_core.db` | `unirep_core.db` |
+| validation report | `materia_ai_core.validation.json` | `unirep_core.validation.json` |
+| storage keys / AsyncStorage prefixes | `materia_ai:*` | `unirep:*` |
+| release artifacts | `materia_ai_core_bundle.zip` | `unirep_core_bundle.zip` |
+
+The uploaded `materia_ai_core_bundle.zip` at the repository root is the legacy
+upload and keeps its old name and internal `materia_ai_data/` paths until a build
+from `scripts/build_core_db.py` replaces it.
+
 The core database is built from converted repertory JSON in
 [drsamonline/homoeopathic-materia-medica-repertory-json](https://github.com/drsamonline/homoeopathic-materia-medica-repertory-json).
 That repository carries **two licences**, one per folder, and the build inherits
@@ -20,7 +45,7 @@ whichever apply to the books it includes.
   repertory included is **GPL-3.0**, ships as its own file, carries this notice,
   and its source is the JSON repository above plus `scripts/build_core_db.py`.
 - **Generated databases are not tracked in Git.** They are written to
-  `materia_ai_data/generated/`, which is ignored, so a GPL-licensed binary never
+  `unirep_data/generated/`, which is ignored, so a GPL-licensed binary never
   sits inside the PolyForm-licensed tree.
 - **A CC0-only build exists** for anyone who needs it:
   `python3 scripts/build_core_db.py --source-dir <checkout> --cc0-only`.
@@ -57,7 +82,7 @@ python3 scripts/build_core_db.py --source-dir ../hmr-json            # GPL-3.0 o
 python3 scripts/build_core_db.py --source-dir ../hmr-json --cc0-only # CC0 output
 ```
 
-The script writes the database plus `materia_ai_core.validation.json` (counts,
+The script writes the database plus `unirep_core.validation.json` (counts,
 grade distribution, licence per book, sha256, self-check results) and exits
 non-zero if it finds FTS5 tables, placeholder rubrics or orphan rows.
 

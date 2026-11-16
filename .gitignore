@@ -1,6 +1,6 @@
 # Build output — produced by scripts/build-offline.sh, never committed.
 dist/
 
-# Generated databases and source JSON — see materia_ai_data/DATA-LICENSES.md.
+# Generated databases and source JSON — see unirep_data/DATA-LICENSES.md.
 # Never committed: a GPL-licensed build must not sit inside this PolyForm tree.
-materia_ai_data/generated/
+unirep_data/generated/
